@@ -1,0 +1,119 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://Jogador.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scripts/Arena.gd" type="Script" id=2]
+[ext_resource path="res://Font.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://pontos.gd" type="Script" id=4]
+[ext_resource path="res://camera.gd" type="Script" id=5]
+[ext_resource path="res://recorde.gd" type="Script" id=6]
+[ext_resource path="res://Inimigo_1.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Inimigo_2.tscn" type="PackedScene" id=8]
+[ext_resource path="res://poder_tempo_recarga.tscn" type="PackedScene" id=9]
+[ext_resource path="res://poder_dano.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Lives.png" type="Texture" id=11]
+[ext_resource path="res://Control.gd" type="Script" id=12]
+[ext_resource path="res://damage-bg.png" type="Texture" id=13]
+
+[sub_resource type="Environment" id=1]
+background_mode = 4
+glow_enabled = true
+glow_bloom = 0.5
+glow_blend_mode = 0
+glow_bicubic_upscale = true
+
+[sub_resource type="DynamicFont" id=2]
+size = 60
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 40
+font_data = ExtResource( 3 )
+
+[node name="Arena" type="Node2D"]
+script = ExtResource( 2 )
+inimigos = [ ExtResource( 7 ), ExtResource( 8 ) ]
+poderes = [ ExtResource( 9 ), ExtResource( 10 ) ]
+
+[node name="Jogador" parent="." instance=ExtResource( 1 )]
+position = Vector2( 320, 180 )
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 1 )
+
+[node name="timer_spawn_inimigo" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[node name="timer_spawn_poder" type="Timer" parent="."]
+wait_time = 10.0
+autostart = true
+
+[node name="timer_dificuldade" type="Timer" parent="."]
+autostart = true
+
+[node name="UI" type="Node2D" parent="."]
+z_index = 20
+
+[node name="Control" type="Control" parent="UI"]
+margin_right = 640.0
+margin_bottom = 360.0
+script = ExtResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="pontos" type="Label" parent="UI/Control"]
+margin_right = 640.0
+margin_bottom = 80.0
+custom_fonts/font = SubResource( 2 )
+text = "0"
+align = 1
+valign = 1
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="recorde" type="Label" parent="UI/Control"]
+margin_top = 281.0
+margin_right = 640.0
+margin_bottom = 361.0
+custom_fonts/font = SubResource( 3 )
+text = "0"
+align = 1
+valign = 1
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="vidas" type="TextureRect" parent="UI/Control"]
+modulate = Color( 0.101961, 0.419608, 0.823529, 1 )
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 40.0
+margin_bottom = 40.0
+texture = ExtResource( 11 )
+expand = true
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="textura_dano" type="TextureRect" parent="UI/Control"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 13 )
+
+[node name="camera" type="Camera2D" parent="."]
+position = Vector2( 320, 180 )
+current = true
+script = ExtResource( 5 )
+
+[node name="timer_camera" type="Timer" parent="camera"]
+[connection signal="timeout" from="timer_spawn_inimigo" to="." method="_on_timer_spawn_inimigo_timeout"]
+[connection signal="timeout" from="timer_spawn_poder" to="." method="_on_timer_spawn_poder_timeout"]
+[connection signal="timeout" from="timer_dificuldade" to="." method="_on_timer_dificuldade_timeout"]
+[connection signal="timeout" from="camera/timer_camera" to="camera" method="_on_timer_camera_timeout"]

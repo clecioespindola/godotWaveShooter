@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Square.png" type="Texture" id=1]
+[ext_resource path="res://poder_basico.gd" type="Script" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 7.77818, 7.77818 )
+
+[sub_resource type="Animation" id=2]
+resource_name = "aparecer"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1e-05, 1e-05 ), Vector2( 1, 1 ), Vector2( 0.75, 0.75 ), Vector2( 1, 1 ) ]
+}
+
+[node name="poder_tempo_recarga" type="Sprite"]
+modulate = Color( 0.180392, 0.74902, 0.34902, 1 )
+rotation = 0.785398
+scale = Vector2( 1e-05, 1e-05 )
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
+modificador_variavel_jogador = "tempo_recarga"
+valor_variavel_jogador = 0.01
+
+[node name="hitbox" type="Area2D" parent="."]
+
+[node name="coll" type="CollisionShape2D" parent="hitbox"]
+visible = false
+shape = SubResource( 1 )
+
+[node name="anim" type="AnimationPlayer" parent="."]
+autoplay = "aparecer"
+anims/aparecer = SubResource( 2 )
+[connection signal="area_entered" from="hitbox" to="." method="_on_hitbox_area_entered"]

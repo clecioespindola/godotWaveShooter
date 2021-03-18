@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Square.png" type="Texture" id=1]
+[ext_resource path="res://scripts/projetil.gd" type="Script" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 8, 8 )
+
+[node name="projetil" type="Sprite"]
+modulate = Color( 0.12549, 0.431373, 0.909804, 1 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+position = Vector2( 0, 4.17233e-07 )
+scale = Vector2( 0.8, 0.8 )
+
+[node name="hitbox" type="Area2D" parent="." groups=[
+"dano",
+]]
+
+[node name="col" type="CollisionShape2D" parent="hitbox"]
+shape = SubResource( 1 )
+[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]
